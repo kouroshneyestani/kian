@@ -1,13 +1,13 @@
 import { events } from "@/data/events";
 
 interface PageProps {
-    params: { id: string };
+    params: Promise<{ id: string }>;
 }
 
-const Page: React.FC<PageProps> = ({ params }) => {
-    const { id } = params;
+const Page = async ({ params }: PageProps) => {
+    const { id } = await params;
 
-    // find correct event based in ID from URL params
+    // Find the correct event based on ID from URL params
     const event = events.find((event) => event.id === parseInt(id));
 
     if (!event) {
@@ -25,7 +25,7 @@ const Page: React.FC<PageProps> = ({ params }) => {
                         <img
                             key={index}
                             src={src}
-                            alt={`alternative`}
+                            alt="alternative"
                             width={600}
                             height={400}
                             className="rounded-2xl object-cover"
