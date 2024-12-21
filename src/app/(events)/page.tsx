@@ -1,4 +1,8 @@
+// data
 import { events, Event } from "@/data/events";
+
+// componnets
+import EventItem from "@/components/Event";
 
 const Page: React.FC = () => {
     return (
@@ -6,9 +10,9 @@ const Page: React.FC = () => {
             <ul className="flex flex-col gap-6">
                 {events.map((event: Event) => (
                     <li key={event.id}>
-                        <article className="p-6 rounded-2xl bg-orange-600 text-white">
-                            {new Date(event.date).toLocaleDateString()}
-                        </article>
+                        <EventItem
+                            data={{ date: event.date, gallery: event.gallery }}
+                        />
                     </li>
                 ))}
             </ul>
