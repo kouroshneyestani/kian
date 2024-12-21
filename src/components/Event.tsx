@@ -1,3 +1,6 @@
+import Link from "next/link";
+import Image from "next/image";
+
 interface EventData {
     date: string;
     gallery?: string[]; // Image URLs
@@ -23,11 +26,15 @@ const EventItem: React.FC<EventItemProps> = ({ data }) => {
                             key={index}
                             className="rounded-2xl overflow-hidden relative aspect-[6-4] bg-red-300"
                         >
-                            <img
-                                src={src}
-                                alt={`alternative`}
-                                className="w-full h-full object-cover"
-                            />
+                            <Link href="#">
+                                <Image
+                                    src={src}
+                                    alt="alternative"
+                                    width={600}
+                                    height={400}
+                                    className="max-w-full h-auto object-cover"
+                                />
+                            </Link>
                         </div>
                     ))}
                 </div>
