@@ -56,6 +56,7 @@ const Events: React.FC<EventsProps> = ({ events }) => {
                     <li key={event.id}>
                         <EventItem
                             data={{
+                                id: event.id,
                                 date: event.date,
                                 gallery: event.gallery,
                             }}

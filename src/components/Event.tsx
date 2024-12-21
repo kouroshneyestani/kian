@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 interface EventData {
+    id: number; // event id
     date: string;
     gallery?: string[]; // Image URLs
 }
@@ -26,7 +27,7 @@ const EventItem: React.FC<EventItemProps> = ({ data }) => {
                             key={index}
                             className="rounded-2xl overflow-hidden relative aspect-[6-4] bg-red-300"
                         >
-                            <Link href="#">
+                            <Link href={`/${data.id}`}>
                                 <Image
                                     src={src}
                                     alt="alternative"
