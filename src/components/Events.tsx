@@ -50,8 +50,8 @@ const Events: React.FC<EventsProps> = ({ events }) => {
     }, [inView]);
 
     return (
-        <div className="max-w-2xl mx-auto relative pt-20">
-            <ul className="flex flex-col gap-6">
+        <>
+            <ul className="w-full flex flex-col gap-6">
                 {data.map((event) => (
                     <li key={event.id}>
                         <EventItem
@@ -65,7 +65,7 @@ const Events: React.FC<EventsProps> = ({ events }) => {
             </ul>
             {isLoading && <div className="text-center mt-4">Loading...</div>}
             <div ref={ref} className="h-10" />
-        </div>
+        </>
     );
 };
 

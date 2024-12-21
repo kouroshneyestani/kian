@@ -11,7 +11,7 @@ const EventItem: React.FC<EventItemProps> = ({ data }) => {
     return (
         <article className="flex flex-col items-center gap-6 relative">
             {data.date && (
-                <span className="w-40 px-6 py-3 rounded-xl bg-blue-600 text-white inline-flex items-center justify-center sticky top-6 z-10">
+                <span className="w-40 h-12 rounded-xl bg-blue-600 text-white inline-flex items-center justify-center sticky top-16 z-10">
                     {new Date(data.date).toLocaleDateString()}
                 </span>
             )}
