@@ -8,10 +8,10 @@ export interface Event {
     gallery: string[];
 }
 
-export const events: Event[] = Array.from({ length: 5 }, (_, i) => ({
+export const events: Event[] = Array.from({ length: 25 }, (_, i) => ({
     id: i,
     name: faker.commerce.productName(),
-    date: faker.date.future().toString(),
+    date: faker.date.past().toString(),
     description: faker.lorem.sentence(),
     gallery: Array.from({ length: 5 }, () =>
         faker.image.urlLoremFlickr({
