@@ -1,5 +1,10 @@
-import React from "react";
-import EventItem from "@/components/Event"; 
+"use client";
+
+import { useState, useEffect } from "react";
+import { useInView } from "react-intersection-observer";
+
+// components
+import EventItem from "@/components/Event";
 
 interface Event {
     id: number;
@@ -13,11 +18,41 @@ interface EventsProps {
     events: Event[];
 }
 
+const initalData: number = 3;
+
 const Events: React.FC<EventsProps> = ({ events }) => {
+    const [data, setdata] = useState<Event[]>(events.slice(0, initalData));
+    const [isLoading, setIsLoading] = useState(false);
+
+    const loadMoreEvents = () => {
+        if (isLoading) return;
+
+        setIsLoading(true);
+
+        setdata((prevEvents) => [
+            ...prevEvents,
+            ...events.slice(prevEvents.length, prevEvents.length + initalData), // add 3 items each time
+        ]);
+
+        setIsLoading(false);
+    };
+
+    // check the triger item is visible to loadMoreEvents
+    const { ref, inView } = useInView({
+        triggerOnce: false,
+        threshold: 1.0,
+    });
+
+    useEffect(() => {
+        if (inView) {
+            loadMoreEvents();
+        }
+    }, [inView]);
+
     return (
         <div className="max-w-2xl mx-auto relative pt-20">
             <ul className="flex flex-col gap-6">
-                {events.map((event) => (
+                {data.map((event) => (
                     <li key={event.id}>
                         <EventItem
                             data={{
@@ -28,6 +63,8 @@ const Events: React.FC<EventsProps> = ({ events }) => {
                     </li>
                 ))}
             </ul>
+            {isLoading && <div className="text-center mt-4">Loading...</div>}
+            <div ref={ref} className="h-10" />
         </div>
     );
 };
