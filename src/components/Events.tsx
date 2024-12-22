@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
-// components
+// componnets
 import EventItem from "@/components/Event";
 
 interface Event {
@@ -14,59 +15,58 @@ interface Event {
     gallery: string[];
 }
 
-interface EventsProps {
-    events: Event[];
-}
+const fetchEvents = async ({ pageParam = 1 }) => {
+    const response = await fetch(`/api/events?page=${pageParam}`);
+    const data = await response.json();
+    return data;
+};
 
-const initalData: number = 3;
+const Events: React.FC = () => {
+    const { fetchNextPage, hasNextPage, isFetchingNextPage, data, isLoading } =
+        useInfiniteQuery({
+            queryKey: ["events"],
+            queryFn: fetchEvents,
+            getNextPageParam: (lastPage) => lastPage.nextPage || false,
+            initialPageParam: 1,
+        });
 
-const Events: React.FC<EventsProps> = ({ events }) => {
-    const [data, setdata] = useState<Event[]>(events.slice(0, initalData));
-    const [isLoading, setIsLoading] = useState(false);
-
-    const loadMoreEvents = () => {
-        if (isLoading) return;
-
-        setIsLoading(true);
-
-        setdata((prevEvents) => [
-            ...prevEvents,
-            ...events.slice(prevEvents.length, prevEvents.length + initalData), // add 3 items each time
-        ]);
-
-        setIsLoading(false);
-    };
-
-    // check the triger item is visible to loadMoreEvents
     const { ref, inView } = useInView({
         triggerOnce: false,
-        threshold: 1.0,
+        threshold: 1,
     });
 
     useEffect(() => {
-        if (inView) {
-            loadMoreEvents();
+        if (inView && hasNextPage && !isFetchingNextPage) {
+            fetchNextPage();
         }
-    }, [inView]);
+    }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
     return (
-        <>
+        <div>
             <ul className="w-full flex flex-col gap-6">
-                {data.map((event) => (
-                    <li key={event.id}>
-                        <EventItem
-                            data={{
-                                id: event.id,
-                                date: event.date,
-                                gallery: event.gallery,
-                            }}
-                        />
-                    </li>
-                ))}
+                {data?.pages.map((page, pageIndex) =>
+                    page.data.map((event: Event, index: number) => (
+                        <li key={`${pageIndex}-${index}`}>
+                            <EventItem
+                                data={{
+                                    id: event.id,
+                                    date: event.date,
+                                    gallery: event.gallery,
+                                }}
+                            />
+                        </li>
+                    ))
+                )}
             </ul>
-            {isLoading && <div className="text-center mt-4">Loading...</div>}
-            <div ref={ref} className="h-10" />
-        </>
+
+            {isLoading && <div>Loading...</div>}
+
+            {hasNextPage && !isFetchingNextPage && (
+                <div ref={ref} className="h-16"></div>
+            )}
+
+            {!hasNextPage && !isFetchingNextPage && <div>No more events</div>}
+        </div>
     );
 };
 
