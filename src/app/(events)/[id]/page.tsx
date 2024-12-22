@@ -42,7 +42,7 @@ const Page = ({ params }: PageProps) => {
     return (
         <div>
             <h1>{event.name}</h1>
-            <p>{new Date(event.date).toLocaleDateString()}</p>
+            <p>{new Date(event.date).toISOString().split("T")[0]}</p>
             <p>{event.description}</p>
             {event.gallery && event.gallery.length > 0 && (
                 <div className="flex flex-col gap-6">
