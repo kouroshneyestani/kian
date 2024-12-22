@@ -13,12 +13,14 @@ interface EventItemProps {
 
 const EventItem: React.FC<EventItemProps> = ({ data }) => {
     return (
-        <article className="flex flex-col items-center gap-6 relative">
+        <article className="flex flex-col items-center gap-6 relative  border border-red-600 rounded-2xl p-6">
             {data.date && (
                 <span className="w-40 h-12 rounded-xl bg-blue-600 text-white inline-flex items-center justify-center sticky top-16 z-10">
                     {new Date(data.date).toLocaleDateString()}
                 </span>
             )}
+
+            <h1 className="text-4xl text-red-600">{data.id}</h1>
 
             {data.gallery && data.gallery.length > 0 && (
                 <div className="flex flex-col gap-6">
