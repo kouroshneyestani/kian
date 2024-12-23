@@ -1,47 +1,47 @@
 import Link from "next/link";
 import Image from "next/image";
 
-interface EventData {
-    id: number; // event id
-    date: string;
-    gallery?: string[]; // Image URLs
-}
+type EventItemProps = {
+    data: {
+        id: number; // event id
+        date: string;
+        gallery?: string[]; // Image URLs
+    };
+};
 
-interface EventItemProps {
-    data: EventData;
-}
+function EventItem({ data }: EventItemProps) {
 
-const EventItem: React.FC<EventItemProps> = ({ data }) => {
     return (
-        <article className="flex flex-col items-center gap-6 relative  border border-red-600 rounded-2xl p-6">
+        <article className="flex flex-col items-center justify-between gap-6 relative border border-red-600 rounded-2xl p-6">
             {data.date && (
                 <span className="w-40 h-12 rounded-xl bg-blue-600 text-white inline-flex items-center justify-center sticky top-16 z-10">
-                    {new Date(data.date).toLocaleDateString()}
+                    {data.date}
                 </span>
             )}
 
-            <h1 className="text-4xl text-red-600">{data.id}</h1>
+            <Link href={`/${data.id}`}>
+                <h1 className="text-4xl text-red-600">{data.id}</h1>
 
-            {data.gallery && data.gallery.length > 0 && (
-                <div className="flex flex-col gap-6">
-                    {data.gallery.map((src, index) => (
-                        <div
-                            key={index}
-                            className="rounded-2xl overflow-hidden relative aspect-[6-4] bg-red-300"
-                        >
-                            <Link href={`/${data.id}`}>
+                {data.gallery && data.gallery.length > 0 && (
+                    <div className="flex flex-col gap-6">
+                        {data.gallery.map((src, index) => (
+                            <div
+                                key={index}
+                                className="w-full rounded-2xl overflow-hidden relative  bg-red-300"
+                            >
                                 <Image
                                     src={src}
-                                    alt="alternative"
+                                    alt={`Event ${data.id} image ${index + 1}`}
+                                    objectFit="cover"
                                     width={600}
                                     height={400}
-                                    className="max-w-full h-auto object-cover"
+                                    className="max-w-full"
                                 />
-                            </Link>
-                        </div>
-                    ))}
-                </div>
-            )}
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </Link>
         </article>
     );
 };
